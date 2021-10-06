@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "904905405772",
+    "project_id": "kankyo-b0436",
+    "storage_bucket": "kankyo-b0436.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904905405772:android:dec69cf7f5b95d55fb0be9",
+        "android_client_info": {
+          "package_name": "com.triplea.kankyo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904905405772-md57jsnsjfdhtvb0efntm8tp8urkcs2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALDKAgVRU7qsisXeibdbsbBhK-EAw0Q5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904905405772-md57jsnsjfdhtvb0efntm8tp8urkcs2t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
