@@ -36,12 +36,12 @@ public class LoginActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     ViewPager viewPager;
-    FloatingActionButton google;
     TextInputLayout email, password;
     TextInputLayout sEmail, sName, sNumber, sAddress, sPassword;
     Button signButton,loginButton;
     FirebaseFirestore db;
-    private CollectionReference noteRef = db.collection("Citizen");
+    FirebaseDatabase fb;
+    DatabaseReference reference;
 
     float v = 0;
 
@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
-        google = findViewById(R.id.fab_google);
 
         tabLayout.addTab(tabLayout.newTab().setText("Login"));
         tabLayout.addTab(tabLayout.newTab().setText("Signup"));
@@ -79,6 +78,13 @@ public class LoginActivity extends AppCompatActivity {
 
                         loginUser();
 
+                        sPassword.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View view, boolean b) {
+                                sPassword.setError(null);
+                            }
+                        });
+
                     } // On Click
                 });
 
@@ -103,14 +109,10 @@ public class LoginActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.setTranslationY(300);
-        google.setTranslationY(300);
 
         tabLayout.setAlpha(v);
 
-        google.setAlpha(v);
-
         tabLayout.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(700).start();
-        google.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(700).start();
 
     }
 
@@ -184,7 +186,6 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         } else {
             sPassword.setError(null);
-            sPassword.setErrorEnabled(false);
             return true;
         }
 
@@ -245,22 +246,6 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
-                    }
-                });
-
-        noteRef.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (DocumentSnapshot.exists()) {
-
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
                     }
                 });
 

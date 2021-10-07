@@ -23,6 +23,8 @@ import java.util.Map;
 public class LoginActivity2 extends AppCompatActivity {
 
     Button signButton;
+    FirebaseDatabase db;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,33 +33,16 @@ public class LoginActivity2 extends AppCompatActivity {
 
         signButton = findViewById(R.id.test);
 
-
         signButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println("Success");
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                // Create a new user with a first and last name
-                Map<String, Object> user = new HashMap<>();
-                user.put("first", "Ada");
-                user.put("last", "Lovelace");
-                user.put("born", 1815);
 
-// Add a new document with a generated ID
-                db.collection("users")
-                        .add(user)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                            }
-                        });
+                db = FirebaseDatabase.getInstance();
+                reference = db.getReference();
+
+                reference.setValue("Test Upload Database");
+
             }
         });
 
