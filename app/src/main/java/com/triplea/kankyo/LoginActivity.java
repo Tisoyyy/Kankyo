@@ -2,15 +2,21 @@ package com.triplea.kankyo;
 
 import static android.content.ContentValues.TAG;
 
+import static androidx.browser.browseractions.BrowserActionsIntent.KEY_TITLE;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.media.tv.TvContract;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,6 +25,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
@@ -27,6 +36,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firestore.v1.FirestoreGrpc;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,12 +46,11 @@ public class LoginActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     ViewPager viewPager;
-    TextInputLayout email, password;
+    TextInputLayout lEmail, lPassword;
     TextInputLayout sEmail, sName, sNumber, sAddress, sPassword;
     Button signButton,loginButton;
     FirebaseFirestore db;
-    FirebaseDatabase fb;
-    DatabaseReference reference;
+    FirebaseAuth auth;
 
     float v = 0;
 
@@ -57,51 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Signup"));
         tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
-        {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab)
-            {
-                viewPager.setCurrentItem(tab.getPosition());
-                loginButton = findViewById(R.id.l_button);
-                signButton = findViewById(R.id.s_button);
-                sEmail = findViewById(R.id.s_email);
-                sName = findViewById(R.id.name);
-                sAddress = findViewById(R.id.address);
-                sPassword = findViewById(R.id.spassword);
-                //System.out.println(signButton);
-                //System.out.println(sEmail);
-
-                signButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        loginUser();
-
-                        sPassword.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                            @Override
-                            public void onFocusChange(View view, boolean b) {
-                                sPassword.setError(null);
-                            }
-                        });
-
-                    } // On Click
-                });
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab)
-            {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab)
-            {
-
-            }
-        });
+        //tabLayout.setupWithViewPager(viewPager);
 
         final LoginAdapter adapter = new LoginAdapter(getSupportFragmentManager(), this, tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
@@ -113,6 +78,114 @@ public class LoginActivity extends AppCompatActivity {
         tabLayout.setAlpha(v);
 
         tabLayout.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(700).start();
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab)
+            {
+                viewPager.setCurrentItem(tab.getPosition());
+                loginButton = findViewById(R.id.l_button);
+                signButton = findViewById(R.id.s_button);
+                lEmail = findViewById(R.id.lemail);
+                lPassword = findViewById(R.id.lpassword);
+                sEmail = findViewById(R.id.s_email);
+                sName = findViewById(R.id.name);
+                sAddress = findViewById(R.id.address);
+                sPassword = findViewById(R.id.spassword);
+
+                signButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        signupUser();
+
+                        sPassword.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View view, boolean b) {
+                                sPassword.setError(null);
+                            }
+                        });
+
+                    } // On Click
+                });
+
+                loginButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        System.out.println(lEmail);
+                        loginUser();
+
+                        lPassword.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View view, boolean b) {
+                                lPassword.setError(null);
+                            }
+                        });
+                    }
+                });
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab)
+            {
+                loginButton = findViewById(R.id.l_button);
+
+                loginButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        System.out.println(lEmail);
+                        loginUser();
+                    }
+                });
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab)
+            {
+
+            }
+        });
+
+    }
+
+    private Boolean validateLEmail() {
+        String val = lEmail.getEditText().getText().toString();
+        String emailPattern = "[a-zA-Z0-9._]+@[a-z]+\\.+[a-z]+";
+
+        if (val.isEmpty()) {
+            lEmail.setError("Field cannot be Empty");
+            return false;
+        } else if (!val.matches(emailPattern)) {
+            lEmail.setError("Invalid Email Address");
+            return false;
+        } else {
+            lEmail.setError(null);
+            lEmail.setErrorEnabled(false);
+            return true;
+        }
+
+    }
+
+    private Boolean validateLPassword() {
+        String val = lPassword.getEditText().getText().toString();
+        String passwordVal = "^" +
+                "(?=.*[0-9])" +         //at least 1 digit
+                //"(?=.*[a-z])" +         //at least 1 lower case letter
+                //"(?=.*[A-Z])" +         //at least 1 upper case letter
+                "(?=.*[a-zA-Z])" +      //any letter
+                //"(?=.*[@#$%^&+=])" +    //at least 1 special character
+                "(?=\\S+$)" +           //no white spaces
+                ".{4,}" +               //at least 4 characters
+                "$";
+
+        if (val.isEmpty()) {
+            lPassword.setError("Field cannot be Empty");
+            return false;
+        } else {
+            lPassword.setError(null);
+            return true;
+        }
 
     }
 
@@ -191,7 +264,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void loginUser() {
+    private void signupUser() {
 
         if(!validateSEmail() | !validateSPassword() | !validateSName() | !validateSAddress()) {
             return;
@@ -202,7 +275,45 @@ public class LoginActivity extends AppCompatActivity {
         String address = sAddress.getEditText().getText().toString().trim();
         String password = sPassword.getEditText().getText().toString().trim();
 
+        Intent intent = new Intent(this, HomePage.class);
+
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+        ActionCodeSettings actionCodeSettings =
+                ActionCodeSettings.newBuilder()
+                        // URL you want to redirect back to. The domain (www.example.com) for this
+                        // URL must be whitelisted in the Firebase Console.
+                        .setUrl("https://www.example.com/finishSignUp?cartId=1234")
+                        // This must be true
+                        .setHandleCodeInApp(true)
+                        .setIOSBundleId("com.example.ios")
+                        .setAndroidPackageName(
+                                "com.example.android",
+                                true, /* installIfNotAvailable */
+                                "12"    /* minimumVersion */)
+                        .build();
+
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Signup Successful", Toast.LENGTH_LONG).show();
+                    auth.sendSignInLinkToEmail(email, actionCodeSettings)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "Email sent.");
+                                    }
+                                }
+                            });
+                    startActivity(intent);
+                    finish();
+                } else Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
         Map<String, Object> user = new HashMap<>();
         user.put("Email", email);
         user.put("Name", name);
@@ -223,31 +334,32 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-        sEmail.getEditText().getText().clear();
-        sName.getEditText().getText().clear();
-        sAddress.getEditText().getText().clear();
-        sPassword.getEditText().getText().clear();
-
     }
 
-    private void isUser() {
+    private void loginUser() {
 
-        String userEnteredEmail = sEmail.getEditText().getText().toString().trim();
+        if (!validateLEmail() | !validateLPassword()) {
+            return;
+        }
 
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+        Intent intent = new Intent(this, HomePage.class);
+
+        String userEnteredEmail = lEmail.getEditText().getText().toString().trim();
+        String userEnteredPassword = lPassword.getEditText().getText().toString().trim();
+
+        auth.signInWithEmailAndPassword(userEnteredEmail, userEnteredPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_LONG).show();
+                    startActivity(intent);
+                    finish();
+                } else Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/l_email"
+        android:id="@+id/lemail"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         android:hint="Password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/l_email"
+        app:layout_constraintTop_toBottomOf="@id/lemail"
         app:hintTextColor="@color/black"
         app:boxStrokeColor="@color/black"
         app:endIconMode="password_toggle"
