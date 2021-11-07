@@ -350,11 +350,14 @@ public class LoginActivity extends AppCompatActivity {
         String userEnteredEmail = lEmail.getEditText().getText().toString().trim();
         String userEnteredPassword = lPassword.getEditText().getText().toString().trim();
 
+        intent.putExtra("email", userEnteredEmail);
+
         auth.signInWithEmailAndPassword(userEnteredEmail, userEnteredPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_LONG).show();
+                    intent.putExtra("email", userEnteredEmail);
                     startActivity(intent);
                     finish();
                 } else Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
