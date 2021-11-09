@@ -18,19 +18,33 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome!"
+        app:layout_constraintHorizontal_bias=".1"
+        android:fontFamily="Roboto"
+        app:layout_constraintBottom_toTopOf="@+id/display_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
         android:id="@+id/display_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="Roboto"
         android:textColor="@color/white"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:fontFamily="Roboto"
-        app:layout_constraintHorizontal_bias=".1"
-        app:layout_constraintVertical_bias=".2"
+        app:layout_constraintVertical_bias="0.3"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.099"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/welcome" />
 
     <TextView
         android:id="@+id/display_email"
@@ -39,8 +53,8 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:fontFamily="Roboto"
-        app:layout_constraintHorizontal_bias=".1"
-        app:layout_constraintVertical_bias=".2"
+        app:layout_constraintHorizontal_bias=".12"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,13 +73,15 @@
         app:layout_constraintVertical_bias="1">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintBottom_toTopOf="@id/report_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="5dp"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/report_button"
@@ -77,7 +93,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias=".9"
+            app:layout_constraintVertical_bias=".97"
             app:maxImageSize="90dp" />
 
 

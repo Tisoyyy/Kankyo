@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.tv.TvContract;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,8 +67,6 @@ public class LoginActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Signup"));
         tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
 
-        //tabLayout.setupWithViewPager(viewPager);
-
         final LoginAdapter adapter = new LoginAdapter(getSupportFragmentManager(), this, tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
 
@@ -106,6 +105,13 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
 
+                        sAddress.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View view, boolean b) {
+                                sAddress.setError(null);
+                            }
+                        });
+
                     } // On Click
                 });
 
@@ -129,15 +135,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab tab)
             {
-                loginButton = findViewById(R.id.l_button);
 
-                loginButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        System.out.println(lEmail);
-                        loginUser();
-                    }
-                });
             }
 
             @Override
@@ -349,6 +347,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String userEnteredEmail = lEmail.getEditText().getText().toString().trim();
         String userEnteredPassword = lPassword.getEditText().getText().toString().trim();
+        loginButton.setBackgroundColor(Color.RED);
 
         intent.putExtra("email", userEnteredEmail);
 
