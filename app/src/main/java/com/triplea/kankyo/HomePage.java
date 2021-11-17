@@ -48,6 +48,7 @@ public class HomePage extends AppCompatActivity {
     FirebaseFirestore db;
     ImageView logout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,7 @@ public class HomePage extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Fetching Data");
         progressDialog.show();
+        ProgressDialog pd = new ProgressDialog(this);
 
         Intent intent = getIntent();
         Intent startReport = new Intent(this, CreateReport.class);
@@ -95,6 +97,8 @@ public class HomePage extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pd.setMessage("Logging out");
+                pd.show();
                 FirebaseAuth.getInstance().signOut();
                 startActivity(startLogin);
             }

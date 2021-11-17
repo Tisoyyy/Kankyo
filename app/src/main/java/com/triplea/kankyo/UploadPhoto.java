@@ -101,8 +101,6 @@ public class UploadPhoto extends AppCompatActivity {
             public void onClick(View view) {
                 uploadPhoto();
                 createReport();
-                startActivity(home);
-                finish();
             }
         });
 
@@ -133,30 +131,39 @@ public class UploadPhoto extends AppCompatActivity {
         pd.setTitle("Uploading Image");
         pd.show();
         Intent getValues = getIntent();
+        Intent home = new Intent(this, HomePage.class);
 
         name = getValues.getStringExtra("name");
         // Create a reference to "mountains.jpg"
         StorageReference mountainsRef = storageReference.child("reports/"+email+"/"+name);
 
-        mountainsRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).show();
-                pd.dismiss();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                pd.dismiss();
-                Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                pd.setMessage("Progress: " + (int)progressPercent+"%");
-            }
-        });
+        if (imageUri == null) {
+            pd.dismiss();
+            Toast.makeText(this, "Please Upload a Photo", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            mountainsRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).show();
+                    pd.dismiss();
+                    startActivity(home);
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    pd.dismiss();
+                    Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                    pd.setMessage("Progress: " + (int)progressPercent+"%");
+                }
+            });
+        }
 
     }
 

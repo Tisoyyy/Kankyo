@@ -34,9 +34,11 @@ public class LogoActivity extends AppCompatActivity {
                 FirebaseUser firebaseUser = auth.getCurrentUser();
                 if (firebaseUser!=null) {
                     startActivity(startHome);
+                    finish();
                 }
                 else {
                     startActivity(startLogin);
+                    finish();
                 }
             }
 
@@ -44,16 +46,4 @@ public class LogoActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-        if (firebaseUser!=null) {
-            startActivity(new Intent(this, HomePage.class));
-        }
-        else {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
-    }
 }
