@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,13 +14,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,9 +33,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Text;
-
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class HomePage extends AppCompatActivity {
@@ -45,6 +46,7 @@ public class HomePage extends AppCompatActivity {
     ProgressDialog progressDialog;
     FloatingActionButton report;
     FirebaseFirestore db;
+    ImageView logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +60,16 @@ public class HomePage extends AppCompatActivity {
 
         Intent intent = getIntent();
         Intent startReport = new Intent(this, CreateReport.class);
+        Intent startLogin = new Intent(this, LoginActivity.class);
 
         recyclerView = findViewById(R.id.recycler_view);
         reportBttn = findViewById(R.id.report_button);
         dispName = findViewById(R.id.display_name);
         dispEmail = findViewById(R.id.display_email);
         report = findViewById(R.id.report_button);
+        logout = findViewById(R.id.logout);
 
-        email = intent.getStringExtra("email");
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         System.out.println(email);
         displayUser();
 
@@ -85,6 +89,14 @@ public class HomePage extends AppCompatActivity {
                 startReport.putExtra("email", email);
 
                 startActivity(startReport);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(startLogin);
             }
         });
 
@@ -150,5 +162,6 @@ public class HomePage extends AppCompatActivity {
             }
         });
     }
+
 
 }

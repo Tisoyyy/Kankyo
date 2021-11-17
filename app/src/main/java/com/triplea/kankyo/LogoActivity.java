@@ -20,28 +20,40 @@ public class LogoActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        Intent startHome = new Intent(this, HomePage.class);
+        Intent startLogin = new Intent(this, LoginActivity.class);
+
         //if (auth.sign)
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        Intent intent2 = new Intent(this, HomePage.class);
         new CountDownTimer(1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
             }
 
             public void onFinish() {
-
-                /*FirebaseUser fUser = auth.getCurrentUser();
-                if (fUser != null) {
-                    startActivity(intent2);
-                } else startActivity(intent);*/
-                startActivity(intent);
+                FirebaseUser firebaseUser = auth.getCurrentUser();
+                if (firebaseUser!=null) {
+                    startActivity(startHome);
+                }
+                else {
+                    startActivity(startLogin);
+                }
             }
 
         }.start();
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+        if (firebaseUser!=null) {
+            startActivity(new Intent(this, HomePage.class));
+        }
+        else {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+    }
 }

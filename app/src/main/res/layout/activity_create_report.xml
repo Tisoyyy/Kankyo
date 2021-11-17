@@ -130,6 +130,7 @@
         app:boxCornerRadiusBottomStart="20dp"
         app:boxStrokeColor="@color/black"
         app:endIconMode="custom"
+        app:endIconDrawable="@drawable/date__1_"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -143,6 +144,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
+        android:id="@+id/next_page"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"

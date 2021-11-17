@@ -352,7 +352,10 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("email", userEnteredEmail);
                     startActivity(intent);
                     finish();
-                } else Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    sProgressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
 

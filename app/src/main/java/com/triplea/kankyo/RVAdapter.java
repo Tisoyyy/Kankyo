@@ -35,10 +35,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         User user = userArrayList.get(position);
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("E, y-M-d':' h:m a");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("E, y-M-d");
 
         holder.rName.setText(user.reportName);
-        holder.rDate.setText(user.reportDate.toString());
+        holder.rDate.setText(dateFormatter.format(user.reportDate));
 
     }
 

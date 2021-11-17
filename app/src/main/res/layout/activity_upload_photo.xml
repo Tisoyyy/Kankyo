@@ -7,7 +7,7 @@
     tools:context=".UploadPhoto">
 
     <ImageView
-        android:id="@+id/create_return"
+        android:id="@+id/return_bttn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/arrow_1__1_"
@@ -23,27 +23,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="Create Report"
         android:elevation="10dp"
+        android:text="Create Report"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0"/>
+        app:layout_constraintVertical_bias="0" />
 
     <Button
+        android:id="@+id/create_report"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
-        android:text="Next"
+        android:text="Create Report"
         android:textColor="@color/white"
-        app:layout_constraintVertical_bias="0.9"
-        app:layout_constraintWidth_percent=".8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintWidth_percent=".8" />
+
+    <ImageView
+        android:id="@+id/upload_photo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="32dp"
+        android:src="@drawable/kankyo"
+        app:layout_constraintBottom_toTopOf="@+id/create_report"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent=".50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="1"
+        android:text="Click the Image to Upload Photo"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toTopOf="@+id/upload_photo"
+        app:layout_constraintEnd_toEndOf="@+id/upload_photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upload_photo" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
