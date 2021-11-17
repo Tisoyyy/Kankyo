@@ -2,44 +2,29 @@ package com.triplea.kankyo;
 
 import static android.content.ContentValues.TAG;
 
-import static androidx.browser.browseractions.BrowserActionsIntent.KEY_TITLE;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.tv.TvContract;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firestore.v1.FirestoreGrpc;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,10 +33,11 @@ public class LoginActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
     TextInputLayout lEmail, lPassword;
-    TextInputLayout sEmail, sName, sNumber, sAddress, sPassword;
+    TextInputLayout sEmail, sName, sAddress, sPassword;
     Button signButton,loginButton;
     FirebaseFirestore db;
     FirebaseAuth auth;
+    ProgressBar progressBar, sProgressBar;
 
     float v = 0;
 
@@ -65,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
         tabLayout.addTab(tabLayout.newTab().setText("Login"));
         tabLayout.addTab(tabLayout.newTab().setText("Signup"));
-        tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final LoginAdapter adapter = new LoginAdapter(getSupportFragmentManager(), this, tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
@@ -91,11 +77,13 @@ public class LoginActivity extends AppCompatActivity {
                 sName = findViewById(R.id.name);
                 sAddress = findViewById(R.id.address);
                 sPassword = findViewById(R.id.spassword);
+                progressBar = findViewById(R.id.prog_bar);
+                sProgressBar = findViewById(R.id.signup_progbar);
 
                 signButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        sProgressBar.setVisibility(View.VISIBLE);
                         signupUser();
 
                         sPassword.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -119,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         System.out.println(lEmail);
+                        progressBar.setVisibility(View.VISIBLE);
                         loginUser();
 
                         lPassword.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -264,14 +253,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signupUser() {
 
-        if(!validateSEmail() | !validateSPassword() | !validateSName() | !validateSAddress()) {
-            return;
-        }
-
         String email = sEmail.getEditText().getText().toString().trim();
         String name = sName.getEditText().getText().toString().trim();
         String address = sAddress.getEditText().getText().toString().trim();
         String password = sPassword.getEditText().getText().toString().trim();
+
+        if(!validateSEmail() | !validateSPassword() | !validateSName() | !validateSAddress()) {
+            sProgressBar.setVisibility(View.INVISIBLE);
+            return;
+        }
 
         Intent intent = new Intent(this, HomePage.class);
 
@@ -306,9 +296,13 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                    intent.putExtra("email", email);
                     startActivity(intent);
                     finish();
-                } else Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    sProgressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -347,7 +341,6 @@ public class LoginActivity extends AppCompatActivity {
 
         String userEnteredEmail = lEmail.getEditText().getText().toString().trim();
         String userEnteredPassword = lPassword.getEditText().getText().toString().trim();
-        loginButton.setBackgroundColor(Color.RED);
 
         intent.putExtra("email", userEnteredEmail);
 

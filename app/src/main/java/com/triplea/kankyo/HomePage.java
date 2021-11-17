@@ -37,14 +37,13 @@ import java.util.ArrayList;
 public class HomePage extends AppCompatActivity {
 
     FloatingActionButton reportBttn;
-    TextView dispName, dispEmail;
+    TextView dispName, dispEmail, dispEmpty;
     String email;
     RecyclerView recyclerView;
     ArrayList<User> userArrayList;
     RVAdapter rvAdapter;
     ProgressDialog progressDialog;
     FloatingActionButton report;
-
     FirebaseFirestore db;
 
     @Override
@@ -58,6 +57,7 @@ public class HomePage extends AppCompatActivity {
         progressDialog.show();
 
         Intent intent = getIntent();
+        Intent startReport = new Intent(this, CreateReport.class);
 
         recyclerView = findViewById(R.id.recycler_view);
         reportBttn = findViewById(R.id.report_button);
@@ -82,7 +82,9 @@ public class HomePage extends AppCompatActivity {
         report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(userArrayList.size());
+                startReport.putExtra("email", email);
+
+                startActivity(startReport);
             }
         });
 
@@ -90,9 +92,12 @@ public class HomePage extends AppCompatActivity {
 
     private void EventChangeListener() {
 
+        dispEmpty = findViewById(R.id.disp_empty);
+
         db.collection("Citizen")
-                .document("josiahalga@gmail.com")
-                .collection("Reports").orderBy("reportDate", Query.Direction.DESCENDING)
+                .document(email)
+                .collection("Reports")
+                .orderBy("reportDate", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -103,16 +108,21 @@ public class HomePage extends AppCompatActivity {
                             return;
                         }
 
-                        for (DocumentChange dc : value.getDocumentChanges()) {
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                userArrayList.add(dc.getDocument().toObject(User.class));
-                            }
-
-                            rvAdapter.notifyDataSetChanged();
+                        if (value.isEmpty()) {
+                            dispEmpty.setText("Report History is empty, click the button below" +
+                                    " to create your first report");
                             if (progressDialog.isShowing()) progressDialog.dismiss();
-
                         }
+                        else {
+                            for (DocumentChange dc : value.getDocumentChanges()) {
+                                if (dc.getType() == DocumentChange.Type.ADDED) {
+                                    userArrayList.add(dc.getDocument().toObject(User.class));
+                                }
 
+                                rvAdapter.notifyDataSetChanged();
+                                if (progressDialog.isShowing()) progressDialog.dismiss();
+                            }
+                        }
 
                     }
                 });
@@ -122,7 +132,7 @@ public class HomePage extends AppCompatActivity {
     private void displayUser() {
         db = FirebaseFirestore.getInstance();
 
-        db.collection("Citizen").document("algazephaniah@gmail.com").get()
+        db.collection("Citizen").document(email).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
