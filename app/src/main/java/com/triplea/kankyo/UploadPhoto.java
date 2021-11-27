@@ -10,12 +10,23 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,22 +52,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class UploadPhoto extends AppCompatActivity {
 
     ImageView returnButton, uploadPhoto;
-    String email, name, description, location, date;
+    String email, name;
     Button createReport;
 
-    DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
     FirebaseStorage storage;
     FirebaseFirestore db;
     CollectionReference reference;
 
     Uri imageUri;
-    String myUri = "";
-    StorageTask storageTask;
     StorageReference storageReference;
     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 
@@ -99,11 +108,48 @@ public class UploadPhoto extends AppCompatActivity {
         createReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 uploadPhoto();
                 createReport();
+
+                String name = getValues.getStringExtra("name");
+                String description = getValues.getStringExtra("description");
+                String location = getValues.getStringExtra("location");
+                String date = getValues.getStringExtra("date");
+                String username = "kankyoenvironmentalapp@gmail.com";
+                String password = "*kankyoapp2021";
+
+                Properties properties = new Properties();
+                properties.put("mail.smtp.auth", "true");
+                properties.put("mail.smtp.starttls.enable", "true");
+                properties.put("mail.smtp.host", "smtp.gmail.com");
+                properties.put("mail.smtp.port", "587");
+
+                Session session = Session.getInstance(properties,
+                        new javax.mail.Authenticator(){
+                            @Override
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(username, password);
+                            }
+                        });
+
+                try {
+                    Message message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(username));
+                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("josiahalga@gmail.com"));
+                    message.setSubject(name);
+                    message.setText("Report Name: " + name + "Report Description: " + description + "\nReport Location: " + location
+                            + "\nReport Date: " + date);
+                    Transport.send(message);
+                    Toast.makeText(getApplicationContext(), "Email Sent Successfully", Toast.LENGTH_LONG).show();
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     private void choosePhoto() {
@@ -117,11 +163,11 @@ public class UploadPhoto extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 100 && data != null && data.getData() != null) {
+            if (requestCode == 100 && data != null && data.getData() != null) {
 
-            imageUri = data.getData();
-            uploadPhoto.setImageURI(imageUri);
-        }
+                imageUri = data.getData();
+                uploadPhoto.setImageURI(imageUri);
+            }
 
     }
 
@@ -177,14 +223,6 @@ public class UploadPhoto extends AppCompatActivity {
         String location = getValues.getStringExtra("location");
         String date = getValues.getStringExtra("date");
 
-        /*
-        if(!validateSEmail() | !validateSPassword() | !validateSName() | !validateSAddress()) {
-            sProgressBar.setVisibility(View.INVISIBLE);
-            return;
-        }*/
-
-        Intent intent = new Intent(this, HomePage.class);
-
         db = FirebaseFirestore.getInstance();
         reference = db.collection("Citizen").document(email).collection("Reports");
 
@@ -228,7 +266,7 @@ public class UploadPhoto extends AppCompatActivity {
 
         try {
             Date date = format.parse(datetoSaved);
-            return date ;
+            return date;
         } catch (ParseException e){
             return null ;
         }

@@ -89,7 +89,6 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startReport.putExtra("email", email);
-
                 startActivity(startReport);
             }
         });
@@ -101,6 +100,7 @@ public class HomePage extends AppCompatActivity {
                 pd.show();
                 FirebaseAuth.getInstance().signOut();
                 startActivity(startLogin);
+                finish();
             }
         });
 

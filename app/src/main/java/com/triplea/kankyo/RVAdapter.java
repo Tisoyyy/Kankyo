@@ -1,12 +1,14 @@
 package com.triplea.kankyo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -26,9 +28,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
+            View v = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
 
-        return new MyViewHolder(v);
+            return new MyViewHolder(v);
     }
 
     @Override
@@ -40,6 +42,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MyViewHolder> {
         holder.rName.setText(user.reportName);
         holder.rDate.setText(dateFormatter.format(user.reportDate));
 
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ViewReport.class);
+                intent.putExtra("name", user.reportName);
+                context.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -50,11 +61,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView rName, rDate;
+        ConstraintLayout item;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             rName = itemView.findViewById(R.id.report_name);
             rDate = itemView.findViewById(R.id.report_date);
+            item = itemView.findViewById(R.id.card_view);
         }
     }
 }

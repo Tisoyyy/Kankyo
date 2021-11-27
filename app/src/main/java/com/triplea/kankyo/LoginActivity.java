@@ -106,7 +106,6 @@ public class LoginActivity extends AppCompatActivity {
                 loginButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        System.out.println(lEmail);
                         progressBar.setVisibility(View.VISIBLE);
                         loginUser();
 
@@ -331,6 +330,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser() {
 
         if (!validateLEmail() | !validateLPassword()) {
+            progressBar.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -353,7 +353,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    sProgressBar.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
             }

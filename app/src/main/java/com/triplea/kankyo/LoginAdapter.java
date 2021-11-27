@@ -25,13 +25,14 @@ public class LoginAdapter extends FragmentPagerAdapter {
 
     public Fragment getItem(int position) {
 
+        Fragment fragment = null;
         switch(position) {
             case 0:
-                LoginTabFragment loginTabFragment = new LoginTabFragment();
-                return loginTabFragment;
+                fragment = new LoginTabFragment();
+                return fragment;
             case 1:
-                SignupTabFragment signupTabFragment = new SignupTabFragment();
-                return signupTabFragment;
+                fragment = new SignupTabFragment();
+                return fragment;
             default:
                 return null;
         }

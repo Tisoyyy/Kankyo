@@ -72,9 +72,21 @@ public class CreateReport extends AppCompatActivity {
             }
         });
 
+        rDate.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                rDate.setError(null);
+            }
+        });
+
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(!validateName() | !validateDescription() | !validateLocation() | !validateDate()) {
+                    return;
+                }
+
                 String name = rName.getEditText().getText().toString().trim();
                 String description = rDescription.getEditText().getText().toString().trim();
                 String location = rLocation.getEditText().getText().toString().trim();
@@ -85,11 +97,66 @@ public class CreateReport extends AppCompatActivity {
                 next.putExtra("location", location);
                 next.putExtra("date", date);
                 next.putExtra("email", email);
-                System.out.println(email);
                 startActivity(next);
                 finish();
             }
         });
+
+    }
+
+    private Boolean validateName() {
+        String val = rName.getEditText().getText().toString();
+
+        if (val.isEmpty()) {
+            rName.setError("Field cannot be Empty");
+            return false;
+        } else {
+            rName.setError(null);
+            rName.setErrorEnabled(false);
+            return true;
+        }
+
+    }
+
+    private Boolean validateDescription() {
+        String val = rDescription.getEditText().getText().toString();
+
+        if (val.isEmpty()) {
+            rDescription.setError("Field cannot be Empty");
+            return false;
+        } else {
+            rDescription.setError(null);
+            rDescription.setErrorEnabled(false);
+            return true;
+        }
+
+    }
+
+    private Boolean validateLocation() {
+        String val = rLocation.getEditText().getText().toString();
+
+        if (val.isEmpty()) {
+            rLocation.setError("Field cannot be Empty");
+            return false;
+        } else {
+            rLocation.setError(null);
+            rLocation.setErrorEnabled(false);
+            return true;
+        }
+
+    }
+
+    private Boolean validateDate() {
+        String val = rDate.getEditText().getText().toString();
+
+        if (val.isEmpty()) {
+            rDate.setError("Field cannot be Empty");
+            return false;
+        } else {
+            rDate.setError(null);
+            rDate.setErrorEnabled(false);
+            return true;
+        }
 
     }
 
