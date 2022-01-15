@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -125,13 +127,6 @@ public class ViewReport extends AppCompatActivity {
         String name = getData.getStringExtra("name");
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("E, y-M-d");
-
-        vPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println(name);
-            }
-        });
 
         db.collection("Citizen").document(email).collection("Reports").document(name).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

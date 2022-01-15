@@ -47,6 +47,7 @@ public class HomePage extends AppCompatActivity {
     FloatingActionButton report;
     FirebaseFirestore db;
     ImageView logout;
+    String userName;
 
 
     @Override
@@ -63,6 +64,7 @@ public class HomePage extends AppCompatActivity {
         Intent intent = getIntent();
         Intent startReport = new Intent(this, CreateReport.class);
         Intent startLogin = new Intent(this, LoginActivity.class);
+        Intent startProfile = new Intent(this, ProfileActivity.class);
 
         recyclerView = findViewById(R.id.recycler_view);
         reportBttn = findViewById(R.id.report_button);
@@ -89,6 +91,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startReport.putExtra("email", email);
+                startReport.putExtra("name", userName);
                 startActivity(startReport);
             }
         });
@@ -154,8 +157,8 @@ public class HomePage extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             String displayEmail = documentSnapshot.getId();
-                            String displayName = documentSnapshot.getString("Name");
-                            dispName.setText(displayName);
+                            userName = documentSnapshot.getString("Name");
+                            dispName.setText(userName);
                             dispEmail.setText(displayEmail);
                         }
                     }

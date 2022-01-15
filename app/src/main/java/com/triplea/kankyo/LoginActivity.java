@@ -4,7 +4,10 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,13 +36,11 @@ public class LoginActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
     TextInputLayout lEmail, lPassword;
-    TextInputLayout sEmail, sName, sAddress, sPassword;
+    TextInputLayout sEmail, sName, sAddress, sPassword,sLastName;
     Button signButton,loginButton;
     FirebaseFirestore db;
     FirebaseAuth auth;
     ProgressBar progressBar, sProgressBar;
-
-    float v = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +59,6 @@ public class LoginActivity extends AppCompatActivity {
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setTranslationY(300);
-
-        tabLayout.setAlpha(v);
-
-        tabLayout.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(700).start();
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab)
@@ -79,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 sPassword = findViewById(R.id.spassword);
                 progressBar = findViewById(R.id.prog_bar);
                 sProgressBar = findViewById(R.id.signup_progbar);
+                sLastName = findViewById(R.id.last_name);
 
                 signButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -207,6 +203,20 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private Boolean validateSLastName() {
+        String val = sLastName.getEditText().getText().toString();
+
+        if (val.isEmpty()) {
+            sLastName.setError("Field cannot be Empty");
+            return false;
+        } else {
+            sLastName.setError(null);
+            sLastName.setErrorEnabled(false);
+            return true;
+        }
+
+    }
+
     private Boolean validateSAddress() {
         String val = sAddress.getEditText().getText().toString();
         String noWhiteSpace = "\\A\\w{4,20}\\z";
@@ -256,8 +266,9 @@ public class LoginActivity extends AppCompatActivity {
         String name = sName.getEditText().getText().toString().trim();
         String address = sAddress.getEditText().getText().toString().trim();
         String password = sPassword.getEditText().getText().toString().trim();
+        String lastName = sLastName.getEditText().getText().toString().trim();
 
-        if(!validateSEmail() | !validateSPassword() | !validateSName() | !validateSAddress()) {
+        if(!validateSEmail() | !validateSPassword() | !validateSName() | !validateSAddress() | !validateSLastName()) {
             sProgressBar.setVisibility(View.INVISIBLE);
             return;
         }
@@ -310,6 +321,7 @@ public class LoginActivity extends AppCompatActivity {
         user.put("Name", name);
         user.put("Address", address);
         user.put("password", password);
+        user.put("Last Name", lastName);
 
         db.collection("Citizen").document(email).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

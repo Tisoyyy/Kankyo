@@ -3,7 +3,6 @@ package com.triplea.kankyo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,15 +12,18 @@ import android.widget.ImageView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 
 public class CreateReport extends AppCompatActivity {
 
     ImageView create_return;
-    String email;
-    TextInputLayout rName, rDescription, rLocation, rDate;
+    String email, userName;
+    TextInputLayout rName, rDescription, rBarangay, rDate, rCity;
     Button nextPage;
     Intent next;
+
+    //TODO: Set current time
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,21 +33,25 @@ public class CreateReport extends AppCompatActivity {
         create_return = findViewById(R.id.create_return);
         rName = findViewById(R.id.r_name);
         rDescription = findViewById(R.id.r_description);
-        rLocation = findViewById(R.id.r_location);
+        rBarangay = findViewById(R.id.r_barangay);
         rDate = findViewById(R.id.r_date);
         nextPage = findViewById(R.id.next_page);
+        rCity = findViewById(R.id.r_city);
 
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String currentDate = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
 
+        rDate.getEditText().setText(currentDate);
 
         Intent passEmail = getIntent();
         next = new Intent(this, UploadPhoto.class);
         Intent intent = new Intent(this, HomePage.class);
 
         email = passEmail.getStringExtra("email");
+        userName = passEmail.getStringExtra("name");
 
         rDate.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +61,7 @@ public class CreateReport extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         month = month + 1;
-                        String date = year+"/"+month+"/"+day;
+                        String date = day+"/"+month+"/"+year;
                         rDate.getEditText().setText(date);
                     }
                 }, year,month,day);
@@ -83,20 +89,24 @@ public class CreateReport extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(!validateName() | !validateDescription() | !validateLocation() | !validateDate()) {
+                if(!validateName() | !validateDescription() | !validateBarangay() | !validateDate() | !validateCity()) {
                     return;
                 }
 
                 String name = rName.getEditText().getText().toString().trim();
                 String description = rDescription.getEditText().getText().toString().trim();
-                String location = rLocation.getEditText().getText().toString().trim();
+                String barangay = rBarangay.getEditText().getText().toString().trim();
+                String city = rCity.getEditText().getText().toString().trim();
                 String date = rDate.getEditText().getText().toString().trim();
+
+                String reportLocation = barangay + ", " + city;
 
                 next.putExtra("name", name);
                 next.putExtra("description", description);
-                next.putExtra("location", location);
+                next.putExtra("location", reportLocation);
                 next.putExtra("date", date);
                 next.putExtra("email", email);
+                next.putExtra("reportName", userName);
                 startActivity(next);
                 finish();
             }
@@ -132,20 +142,33 @@ public class CreateReport extends AppCompatActivity {
 
     }
 
-    private Boolean validateLocation() {
-        String val = rLocation.getEditText().getText().toString();
+    private Boolean validateBarangay() {
+        String val = rBarangay.getEditText().getText().toString();
 
         if (val.isEmpty()) {
-            rLocation.setError("Field cannot be Empty");
+            rBarangay.setError("Field cannot be Empty");
             return false;
         } else {
-            rLocation.setError(null);
-            rLocation.setErrorEnabled(false);
+            rBarangay.setError(null);
+            rBarangay.setErrorEnabled(false);
             return true;
         }
 
     }
 
+    private Boolean validateCity() {
+        String val = rCity.getEditText().getText().toString();
+
+        if (val.isEmpty()) {
+            rCity.setError("Field cannot be Empty");
+            return false;
+        } else {
+            rCity.setError(null);
+            rCity.setErrorEnabled(false);
+            return true;
+        }
+
+    }
     private Boolean validateDate() {
         String val = rDate.getEditText().getText().toString();
 

@@ -6,20 +6,26 @@
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22552083333333334" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/drawable/buttons.xml" value="0.22552083333333334" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/drawable/edit_text.xml" value="0.22552083333333334" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/drawable/ic_home.xml" value="0.382051282051282" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.22552083333333334" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/drawable/view_bg.xml" value="0.22552083333333334" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/font/roboto.xml" value="0.23958333333333334" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_create_report.xml" value="0.22" />
-        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_home_page.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_home.xml" value="0.371875" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_home_page.xml" value="0.5" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_login.xml" value="0.1838768115942029" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_login2.xml" value="0.1933876811594203" />
-        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_main.xml" value="0.12771739130434784" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_profile.xml" value="0.371875" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_upload_photo.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/activity_view_report.xml" value="0.18" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/fragment_report_page.xml" value="0.18070652173913043" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/item.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/login_tab_fragment.xml" value="0.1838768115942029" />
-        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/signup_tab_fragment.xml" value="0.1838768115942029" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/logo_activity.xml" value="0.371875" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/nav_header.xml" value="0.371875" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/layout/signup_tab_fragment.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/menu/drawer_menu.xml" value="0.371875" />
         <entry key="..\:/AndroidStudioProjects/KANKYO2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.11614583333333334" />
       </map>
     </option>
